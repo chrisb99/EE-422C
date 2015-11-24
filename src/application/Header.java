@@ -1,13 +1,13 @@
-package project6;
-/* GAME PROJECT <MyClass.java>
+package application;
+/* GAME PROJECT <MasterMind.java>
  * EE422C Project 6 submission by
- * Replace <...> with your actual data.
- * <Student1 Name>
- * <Student1 EID>
- * <Student1 5-digit Unique No.>
- * <Student2 Name>
- * <Student2 EID>
- * <Student2 5-digit Unique No.>
+ * Replace <12/4/2015> with your actual data.
+ * <Hasun Amarasekara>
+ * <hua59>
+ * <16345.>
+ * <Tiyani Bi>
+ * <tb25947>
+ * <16345>
  * Slip days used: <0>
  * Fall 2015
  */

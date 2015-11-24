@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.canvas.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
-
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
    <top>
@@ -31,14 +31,42 @@
       </MenuBar>
    </top>
    <right>
-      <VBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="30.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" onDragDetected="#playBluePeg" prefHeight="200.0" prefWidth="100.0" spacing="30.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Red" />
-            <Button mnemonicParsing="false" text="Blue" />
-            <Button mnemonicParsing="false" text="Green" />
-            <Button mnemonicParsing="false" text="Purple" />
-            <Button mnemonicParsing="false" text="Button" />
-            <Button mnemonicParsing="false" text="Button" />
+            <Button mnemonicParsing="false" onAction="#playRedPeg" prefHeight="30.0" prefWidth="90.0" text="Red" textFill="#d31010">
+               <font>
+                  <Font name="Arial Black" size="13.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#playBluePeg" prefHeight="30.0" prefWidth="90.0" text="Blue" textFill="#0c02d0">
+               <font>
+                  <Font name="Arial Black" size="13.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#playGreenPeg" prefHeight="30.0" prefWidth="90.0" text="Green" textFill="#02fc02">
+               <font>
+                  <Font name="Arial Black" size="13.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#playPurplePeg" prefHeight="30.0" prefWidth="90.0" text="Purple" textFill="#740aff">
+               <font>
+                  <Font name="Arial Black" size="13.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#playYellowPeg" prefHeight="30.0" prefWidth="90.0" text="Yellow" textFill="#ebde2a">
+               <font>
+                  <Font name="Arial Black" size="13.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#playOrangePeg" prefHeight="30.0" prefWidth="90.0" text="Orange" textFill="#e1530b">
+               <font>
+                  <Font name="Arial Black" size="13.0" />
+               </font></Button>
+            <Button mnemonicParsing="false" onAction="#checkButton" prefHeight="30.0" prefWidth="90.0" text="Check">
+               <font>
+                  <Font name="Arial Black" size="13.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="Undo Move">
+               <font>
+                  <Font name="Arial Black" size="12.0" />
+               </font>
+            </Button>
          </children>
          <BorderPane.margin>
             <Insets />
@@ -46,6 +74,6 @@
       </VBox>
    </right>
    <center>
-      <Canvas height="850.0" width="500.0" BorderPane.alignment="CENTER" />
+      <Canvas fx:id="mmCanvas" height="850.0" width="500.0" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>

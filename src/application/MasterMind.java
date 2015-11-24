@@ -6,9 +6,9 @@ import java.util.Random;
 import javafx.scene.paint.Color;
 
 public class MasterMind {
-	private ColorPeg[][] slots = new ColorPeg[13][4];
-	private Status[] checking = new Status[13];
-	private int guess;
+	private ColorPeg[][] coloredSlots = new ColorPeg[13][4];
+	private FeedBack[] checking = new FeedBack[13];
+	private static int guess;
 	
 	
 	
@@ -20,32 +20,43 @@ public class MasterMind {
 			int c = rand.nextInt(6);
 			switch(c){
 			case 0:
-				slots[0][i] = new ColorPeg(Color.GREEN);
+				coloredSlots[0][i] = new ColorPeg(Color.GREEN);
 				continue;
 			case 1:
-				slots[0][i] = new ColorPeg(Color.BLUE);
+				coloredSlots[0][i] = new ColorPeg(Color.BLUE);
 				continue;
 			case 2:
-				slots[0][i] = new ColorPeg(Color.ORANGE);
+				coloredSlots[0][i] = new ColorPeg(Color.ORANGE);
 				continue;
 			case 3:
-				slots[0][i] = new ColorPeg(Color.PURPLE);
+				coloredSlots[0][i] = new ColorPeg(Color.PURPLE);
 				continue;
 			case 4:
-				slots[0][i] = new ColorPeg(Color.RED);
+				coloredSlots[0][i] = new ColorPeg(Color.RED);
 				continue;
 			case 5:
-				slots[0][i] = new ColorPeg(Color.YELLOW);
+				coloredSlots[0][i] = new ColorPeg(Color.YELLOW);
 				continue;
 			}
 		}
 	}
+	public static void addColoredPeg(ColorPeg lastSelectedPin){
+		//Take the Pin the ColoredPeg passed in and add it colorSlots matrix
+	}
+	public static void startGame(MMController mmCont){
+		//Take the controller class passed from main and draw the Canvas
+		mmCont.drawBoard();
+	}
+	public static int getGuess(){
+		//Will return the number of the guess we are currently on.
+		return guess;}
+	public static int pegsInGuess(){
+		//This will return the number of pegs that are in the current guess
+		return 0;
+	}
 	
-	
-	
-	
-	public void getStatus(){
-		Status userGuess = new Status(slots[guess]);
+	public void getFeedBack(){
+		FeedBack userGuess = new FeedBack(coloredSlots[guess]);
 	}
 	
 	
@@ -54,11 +65,11 @@ public class MasterMind {
 		return null;
 	}
 	
-	private class Status{
+	private class FeedBack{
 		private ArrayList<BwPeg> bwStatus = new ArrayList<BwPeg>(4);
 		
-		public Status(ColorPeg[] userGuess){
-			ColorPeg[] answer = slots[0];
+		public FeedBack(ColorPeg[] userGuess){
+			ColorPeg[] answer = coloredSlots[0];
 			boolean[] correct = new boolean[4];
 			
 			//check back later
