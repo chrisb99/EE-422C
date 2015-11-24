@@ -6,15 +6,25 @@ import java.util.Random;
 import javafx.scene.paint.Color;
 
 public class MasterMind {
-	private ColorPeg[][] coloredSlots = new ColorPeg[13][4];
-	private FeedBack[] checking = new FeedBack[13];
+	private static ColorPeg[][] coloredSlots;
 	private static int guess;
+	private static int pegLoc;
 	
+	public static int getGuess(){
+		//Will return the number of the guess we are currently on.
+		return guess;}
 	
+	public static int getPegLoc(){
+		return pegLoc;
+	}
 	
+	public static void incrementGuess(){
+		guess += 1;
+		pegLoc = 0;
+	}
 	
-
-	private void generateAnswer(){
+	//generate answers
+	private static void generateAnswer(){
 		Random rand = new Random();
 		for(int i = 0; i < 4; i ++){
 			int c = rand.nextInt(6);
@@ -40,62 +50,63 @@ public class MasterMind {
 			}
 		}
 	}
-	public static void addColoredPeg(ColorPeg lastSelectedPin){
+	
+	//
+	public static void addColoredPeg(ColorPeg lastSelectedPeg){
 		//Take the Pin the ColoredPeg passed in and add it colorSlots matrix
+		
+		if(pegLoc > 3) return;
+		coloredSlots[guess][pegLoc] = lastSelectedPeg;
+		pegLoc ++;
 	}
+	
+	
 	public static void startGame(MMController mmCont){
 		//Take the controller class passed from main and draw the Canvas
 		mmCont.drawBoard();
 	}
-	public static int getGuess(){
-		//Will return the number of the guess we are currently on.
-		return guess;}
-	public static int pegsInGuess(){
-		//This will return the number of pegs that are in the current guess
-		return 0;
-	}
-	
-	public void getFeedBack(){
-		FeedBack userGuess = new FeedBack(coloredSlots[guess]);
-	}
 	
 	
-	//see if the game is finished, and with player wins
-	public String checkStatus(){
-		return null;
-	}
-	
-	private class FeedBack{
-		private ArrayList<BwPeg> bwStatus = new ArrayList<BwPeg>(4);
+	public static ArrayList<BwPeg> getFeedBack(){
+		ArrayList<BwPeg> bwFeedBack = new ArrayList<BwPeg>(4);		
+		ColorPeg[] userGuess = coloredSlots[guess];
+		ColorPeg[] answer = coloredSlots[0];
+		boolean[] correct = new boolean[4];
 		
-		public FeedBack(ColorPeg[] userGuess){
-			ColorPeg[] answer = coloredSlots[0];
-			boolean[] correct = new boolean[4];
-			
-			//check back later
-			for(int i=0; i<4; i++){
-				if(userGuess[i].equals(answer[i])){
-					bwStatus.add(new BwPeg(Color.BLACK));
-				}else{	
-					for(int j = 0; j < 4; j++){
-						if(userGuess[i].equals(answer[j])){
-							bwStatus.add(new BwPeg(Color.WHITE));
-						}
-					}
+		
+		//check black pegs first
+		for(int i = 0; i < 4; i ++){
+			if(userGuess[i].equals(answer[i])){
+				correct[i] = true;
+				bwFeedBack.add(new BwPeg(Color.BLACK));
+			}
+		}
+		
+		//check white pegs last
+		for(int i=0; i<4; i++){
+			if(correct[i]){
+				continue;
+			}
+			for(int j = 0; j < 4; j++){
+				
+					//if the user's guesses already right, skip this one						
+				if(correct[j]){
+					continue;
+				}else if(userGuess[i].equals(answer[j])){
+					bwFeedBack.add(new BwPeg(Color.WHITE));
 				}
 			}
 			
-			
-			
-//			if(userGuess.equals(answer)){
-//				for(int i = 0; i < 4; i ++){
-//					status.add(new BwPeg(Color.BLACK));
-//				}
-//			}
-			
-			
-			
-			
-		}
+		}	
+		return bwFeedBack;
 	}
+	
+	//constructor for master mind
+	public MasterMind(){
+		this.coloredSlots = new ColorPeg[13][4];
+		this.guess = 1;
+		this.pegLoc = 0;
+	}
+	
+	
 }
