@@ -72,6 +72,7 @@ public class MMController {
 		gc.strokeLine(0, 0, gcWdth, 0);
 		//Draw the Status
 		gc.setLineWidth(1);
+		//Sounds kind of Zen?
 		for (int i = 0; i < 12; i++) {
 			gc.strokeLine((0), (rHght * i), (gcWdth), ((gcHght / 13) * i));
 			gc.strokeOval(gcWdth*.825,(i*rHght+(rHght/6)), 20,20 );
