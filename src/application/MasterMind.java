@@ -18,6 +18,10 @@ public class MasterMind {
 		return pegLoc;
 	}
 	
+	public static ColorPeg[][] getSlots(){
+		return coloredSlots;
+	}
+	
 	public static void incrementGuess(){
 		guess += 1;
 		pegLoc = 0;
@@ -63,6 +67,7 @@ public class MasterMind {
 	
 	public static void startGame(MMController mmCont){
 		//Take the controller class passed from main and draw the Canvas
+		MasterMind mm = new MasterMind();
 		mmCont.drawBoard();
 	}
 	
