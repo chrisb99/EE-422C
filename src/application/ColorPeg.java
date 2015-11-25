@@ -21,7 +21,26 @@ public class ColorPeg extends GamePeg{
 	
 	public ColorPeg(Color c){
 		this.pegColor = c;
-		this.pegChar = c.toString().charAt(0);
+		switch(c.toString()){
+		case "0xff0000ff":
+			this.pegChar = 'R';
+			break;
+		case "0x0000ffff":
+			this.pegChar = 'B';
+			break;
+		case "0x008000ff":
+			this.pegChar = 'G';
+			break;
+		case "0x800080ff":
+			this.pegChar = 'P';
+			break;
+		case "0xffa500ff":
+			this.pegChar = 'O';
+			break;
+		case "0xffff00ff":
+			this.pegChar = 'Y';
+
+		}
 	}
 
 }

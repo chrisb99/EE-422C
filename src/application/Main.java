@@ -26,6 +26,7 @@ public class Main extends Application {
 		stage.setScene(scene);
 		stage.show();
 		//MasterMind game = new MasterMind();
+	
 		MasterMind.startGame(mmCont);
 
 	} catch (IOException e) {

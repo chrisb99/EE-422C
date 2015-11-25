@@ -21,6 +21,14 @@ public class BwPeg extends GamePeg{
 	
 	public BwPeg(Color c){
 		this.pegColor = c;
-		this.pegChar = c.toString().charAt(0);
+		switch(c.toString()){
+		case "0x000000ff":
+			this.pegChar = 'b';
+			break;
+		case "0xffffffff":
+			this.pegChar = 'w';
+			break;
+
+		}
 	}
 }

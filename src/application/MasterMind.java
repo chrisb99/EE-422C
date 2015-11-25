@@ -9,6 +9,7 @@ public class MasterMind {
 	private static ColorPeg[][] coloredSlots;
 	private static int guess;
 	private static int pegLoc;
+	private static BwPeg[][] pegDraw;
 	
 	public static int getGuess(){
 		//Will return the number of the guess we are currently on.
@@ -20,6 +21,14 @@ public class MasterMind {
 	
 	public static ColorPeg[][] getSlots(){
 		return coloredSlots;
+	}
+	
+	public static void clearPegLoc(){
+		pegLoc = 0;
+	}
+	
+	public static BwPeg[][] getPegDraw(){
+		return pegDraw;
 	}
 	
 	public static void incrementGuess(){
@@ -64,10 +73,16 @@ public class MasterMind {
 		pegLoc ++;
 	}
 	
+	public static void undoLastPeg(){
+		if(pegLoc == 0) return;
+		pegLoc--;
+		coloredSlots[guess][pegLoc] = null;
+	}
 	
 	public static void startGame(MMController mmCont){
 		//Take the controller class passed from main and draw the Canvas
 		MasterMind mm = new MasterMind();
+		generateAnswer();
 		mmCont.drawBoard();
 	}
 	
@@ -78,16 +93,24 @@ public class MasterMind {
 		ColorPeg[] answer = coloredSlots[0];
 		boolean[] correct = new boolean[4];
 		
-		
+		//ColorPeg c = new ColorPeg(Color.BLACK);
+//		System.out.println(Color.BLUE.toString());
+//		System.out.println(Color.BLACK.toString());
+//		System.out.println(Color.GRAY.toString());
+
+		//System.out.println(answer[0].toString());
 		//check black pegs first
 		for(int i = 0; i < 4; i ++){
-			if(userGuess[i].equals(answer[i])){
+			if(userGuess[i] == null){
+				return null;
+			}
+			if(userGuess[i].toString().equals(answer[i].toString())){
 				correct[i] = true;
 				bwFeedBack.add(new BwPeg(Color.BLACK));
 			}
 		}
 		
-		//check white pegs last
+		//check GRAY pegs last
 		for(int i=0; i<4; i++){
 			if(correct[i]){
 				continue;
@@ -97,12 +120,17 @@ public class MasterMind {
 					//if the user's guesses already right, skip this one						
 				if(correct[j]){
 					continue;
-				}else if(userGuess[i].equals(answer[j])){
+				}else if(userGuess[i].toString().equals(answer[j].toString())){
 					bwFeedBack.add(new BwPeg(Color.WHITE));
 				}
 			}
 			
-		}	
+		}
+		
+		for(int i = 0; i < bwFeedBack.size(); i ++){
+			pegDraw[guess][i] = bwFeedBack.get(i);
+		}
+		
 		return bwFeedBack;
 	}
 	
@@ -111,6 +139,7 @@ public class MasterMind {
 		this.coloredSlots = new ColorPeg[13][4];
 		this.guess = 1;
 		this.pegLoc = 0;
+		this.pegDraw = new BwPeg[13][4];
 	}
 	
 	
