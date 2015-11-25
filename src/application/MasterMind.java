@@ -122,6 +122,8 @@ public class MasterMind {
 					continue;
 				}else if(userGuess[i].toString().equals(answer[j].toString())){
 					bwFeedBack.add(new BwPeg(Color.WHITE));
+					correct[j] = true;
+					break;
 				}
 			}
 			
