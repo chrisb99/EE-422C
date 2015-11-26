@@ -57,9 +57,9 @@ public class MMController {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("End of Game");
 			alert.setHeaderText(endText);
-			alert.setContentText("Choose your option.");
+			alert.setContentText("Would you like to play again?");
 
-			ButtonType buttonTypeOne = new ButtonType("One");
+			ButtonType buttonTypeOne = new ButtonType("Play Again");
 			ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
 			alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
 			Optional<ButtonType> result = alert.showAndWait();
