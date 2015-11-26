@@ -1,5 +1,5 @@
 package application;
-	
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -10,31 +10,29 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 
-
 public class Main extends Application {
 	@Override
-	public void start(Stage stage){ 
-	URL location = getClass().getResource("MasterMindGUI.fxml");
-	FXMLLoader loader = new FXMLLoader(location);
-	MMController mmCont= new MMController();
-	loader.setController(mmCont);
-	try {
-		//MasterMind.startGame(mmCont);
-		Parent root = loader.load();
-		Scene scene = new Scene(root, 600, 900);
-		stage.setTitle("MasterMind");
-		stage.setScene(scene);
-		stage.show();
-		//MasterMind game = new MasterMind();
-	
-		MasterMind.startGame(mmCont);
+	public void start(Stage stage) {
+		URL location = getClass().getResource("MasterMindGUI.fxml");
+		FXMLLoader loader = new FXMLLoader(location);
+		MMController mmCont = new MMController();
+		loader.setController(mmCont);
+		try {
+			Parent root = loader.load();
+			Scene scene = new Scene(root, 600, 900);
+			stage.setTitle("MasterMind");
+			stage.setScene(scene);
+			stage.show();
+			MasterMind.startGame();
+			mmCont.drawBoard();
 
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
-}
 	public static void main(String[] args) {
 		launch(args);
 	}

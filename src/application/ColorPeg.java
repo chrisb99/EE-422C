@@ -8,7 +8,7 @@ public class ColorPeg extends GamePeg{
 	private char pegChar;
 
 	@Override
-	public Color getColorMethod() {
+	public Color getColor() {
 		return pegColor;
 	}
 
