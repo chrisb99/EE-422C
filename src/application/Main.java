@@ -15,17 +15,15 @@ public class Main extends Application {
 	public void start(Stage stage) {
 		URL location = getClass().getResource("MasterMindGUI.fxml");
 		FXMLLoader loader = new FXMLLoader(location);
-		MMController mmCont = new MMController();
-		loader.setController(mmCont);
+		MMController mastermindController = new MMController();
+		loader.setController(mastermindController);
 		try {
 			Parent root = loader.load();
 			Scene scene = new Scene(root, 600, 900);
 			stage.setTitle("MasterMind");
 			stage.setScene(scene);
 			stage.show();
-			MasterMind.startGame();
-			mmCont.drawBoard();
-
+			mastermindController.launchMastermind();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

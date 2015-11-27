@@ -24,7 +24,8 @@ public class MMController {
 	private Canvas mmCanvas;
 	private static Double gcWdth;
 	private static Double gcHght;
-	// private boolean coverSet = true;
+	private static GraphicsContext gc;
+	private static double rHght;
 
 	@FXML
 	void checkButton(ActionEvent event) {
@@ -50,7 +51,7 @@ public class MMController {
 		if ((bCount == 4) || (guessNum == 12)) {
 			String endText;
 			if (bCount == 4) {
-				endText = "you win, good job!";
+				endText = "You win, good job!";
 			} else {
 				endText = "Hahaha you suck!";
 			}
@@ -64,8 +65,7 @@ public class MMController {
 			alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == buttonTypeOne) {
-				 MasterMind.startGame();
-				 drawBoard();
+				launchMastermind();
 			} else {
 				// ... user chose CANCEL or closed the dialog
 			}
@@ -124,13 +124,34 @@ public class MMController {
 	@FXML
 	void undoLastMove(ActionEvent event) {
 		MasterMind.undoLastPeg();
-		// need to find a way to clear canvas, or it will leave the old peg
-		// trace on.
 		this.drawBoard();
 	}
 
-	private static GraphicsContext gc;
-	static double rHght;
+	void launchMastermind() {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Welcome to Mastermind");
+		alert.setHeaderText("What would you like to do");
+		ButtonType playButton = new ButtonType("Play Mastermind!");
+		ButtonType watchButton = new ButtonType("Computer Play's");
+		alert.getButtonTypes().setAll(playButton, watchButton);
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == playButton) {
+			// Game starts and the player plays.
+			MasterMind.startGame();
+			drawBoard();
+		} else {
+
+			computerPlays();
+		}
+	}
+
+	// TODO Write the algorithm for the computer playing the Game and use a
+	// timer like Project so we can watch each step the computer makes as an
+	// animation
+	void computerPlays() {
+		//Can call the button click methods and recycle everything from above.
+		return;
+	}
 
 	void drawBoard() {
 		gc = mmCanvas.getGraphicsContext2D();
