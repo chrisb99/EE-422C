@@ -89,7 +89,15 @@ public class MMController {
 			alert.setTitle("End of Game");
 			alert.setHeaderText(endText);
 			alert.setContentText("Would you like to play again?");
-
+			startButton.setVisible(true);
+			redButton.setVisible(true);
+			blueButton.setVisible(true);
+			yellowButton.setVisible(true);
+			purpleButton.setVisible(true);
+			orangeButton.setVisible(true);
+			greenButton.setVisible(true);
+			blackButton.setVisible(true);
+			whiteButton.setVisible(true);
 			ButtonType buttonTypeOne = new ButtonType("Play Again");
 			ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
 			alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
@@ -206,7 +214,10 @@ public class MMController {
 		BwPeg[][] bwDraw = MasterMind.getPegDraw();
 		gcWdth = mmCanvas.getWidth();
 		gcHght = (mmCanvas.getHeight());
-		gc.setFill(Color.SANDYBROWN);
+		gc.setFill(Color.DARKGOLDENROD);
+//		Image backGround;
+//		backGround = new Image(getClass().getResourceAsStream("Iroko_wood.png"));
+//		gc.drawImage(backGround, 0, 0, gcHght, gcWdth);
 		gc.fillRect(0, 0, gcWdth, gcHght);
 		rHght = gcHght / 13;
 		gc.setStroke(javafx.scene.paint.Color.BLACK);

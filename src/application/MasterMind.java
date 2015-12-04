@@ -145,15 +145,6 @@ public final class MasterMind {
 					bwFeedBack.add(new BwPeg(Color.BLACK));
 				}
 			}
-<<<<<<< HEAD
-			for(int j = 0; j < 4; j++){
-				
-					//if the user's guesses already right, skip this one						
-				if(correct[j]){
-					continue;
-				}else if(userGuess[i].toString().equals(answer[j].toString())){
-					bwFeedBack.add(new BwPeg(Color.WHITE));
-=======
 			// Then check for White pegs last
 			for (int i = 0; i < 4; i++) {
 				for (int j = 0; j < 4; j++) {
@@ -162,7 +153,6 @@ public final class MasterMind {
 						checkBorW[j] = true;
 						break;
 					}
->>>>>>> TurkeyDayBranch
 				}
 			}
 
