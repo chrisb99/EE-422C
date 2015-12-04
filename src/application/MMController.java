@@ -1,12 +1,7 @@
 package application;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
-
-import javax.imageio.ImageIO;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,6 +9,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
@@ -26,6 +22,37 @@ public class MMController {
 	private static Double gcHght;
 	private static GraphicsContext gc;
 	private static double rHght;
+	
+	@FXML
+	private Button blackButton;
+	@FXML
+	private Button whiteButton;
+	@FXML
+	private Button redButton;
+	@FXML
+	private Button blueButton;
+	@FXML
+	private Button yellowButton;
+	@FXML
+	private Button purpleButton;
+	@FXML
+	private Button greenButton;
+	@FXML
+	private Button orangeButton;
+	@FXML
+	private Button startButton;
+	
+	@FXML
+	void startButton(ActionEvent event){
+		startButton.setVisible(false);
+		redButton.setVisible(false);
+		blueButton.setVisible(false);
+		yellowButton.setVisible(false);
+		purpleButton.setVisible(false);
+		orangeButton.setVisible(false);
+		greenButton.setVisible(false);
+		MasterMind.incrementGuess();
+	}
 
 	@FXML
 	void checkButton(ActionEvent event) {
@@ -46,14 +73,17 @@ public class MMController {
 			System.out.println("Please dont' do that, it's incredibly annoying.");
 			return;
 		}
-		drawBWPegs();
+		if(!MasterMind.getAi()){
+			drawBWPegs();
+		}
 		bCount = checkBlack(pegStats);
 		if ((bCount == 4) || (guessNum == 12)) {
-			String endText;
+			String endText = new String();
+			endText = MasterMind.getAi()? "AI" : "You";
 			if (bCount == 4) {
-				endText = "You win, good job!";
+				endText += " win!";
 			} else {
-				endText = "Hahaha you suck!";
+				endText += " suck!";
 			}
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("End of Game");
@@ -120,6 +150,18 @@ public class MMController {
 		MasterMind.addColoredPeg(new ColorPeg(javafx.scene.paint.Color.YELLOW));
 		this.drawBoard();
 	}
+	
+	@FXML
+	void playWhitePeg(ActionEvent event) {
+		MasterMind.addBwPeg(new BwPeg(javafx.scene.paint.Color.WHITE));
+		this.drawBoard();
+	}
+	
+	@FXML
+	void playBlackPeg(ActionEvent event) {
+		MasterMind.addBwPeg(new BwPeg(javafx.scene.paint.Color.BLACK));
+		this.drawBoard();
+	}
 
 	@FXML
 	void undoLastMove(ActionEvent event) {
@@ -137,11 +179,16 @@ public class MMController {
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == playButton) {
 			// Game starts and the player plays.
+			startButton.setVisible(false);
+			blackButton.setVisible(false);
+			whiteButton.setVisible(false);
 			MasterMind.startGame();
 			drawBoard();
 		} else {
-
+			MasterMind.startAIGame();
 			computerPlays();
+			drawBoard();
+			
 		}
 	}
 
@@ -176,7 +223,11 @@ public class MMController {
 		// Draw BW PEGS
 		drawBWPegs();
 		// Draw the ColoredSlots and covers the top with the title.
+		if(MasterMind.getAi()){
+			drawColoredSlots(false);
+		}else{
 		drawColoredSlots(true);
+		}
 	}
 
 	private void drawBWPegs() {
@@ -192,7 +243,7 @@ public class MMController {
 				if (bwDraw[i][j] != null) {
 					gc.setFill(bwDraw[i][j].getColor());
 					gc.strokeOval(gcWdth * horizOffset, (i * rHght + vrtclOffset), 20, 20);
-					gc.fillOval(gcWdth * horizOffset, (i * rHght + vrtclOffset), 18, 18);
+					gc.fillOval(gcWdth * horizOffset, (i * rHght + vrtclOffset), 20, 20);
 				} else {
 					gc.strokeOval(gcWdth * horizOffset, (i * rHght + vrtclOffset), 20, 20);
 				}

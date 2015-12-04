@@ -9,7 +9,9 @@ public final class MasterMind {
 	private static ColorPeg[][] coloredSlots;
 	private static int guess;
 	private static int pegLoc;
+	private static int bwPegLoc;
 	private static BwPeg[][] pegDraw;
+	private static boolean ai = false;
 
 	public static int getGuess() {
 		// Will return the number of the guess we are currently on.
@@ -18,6 +20,10 @@ public final class MasterMind {
 
 	public static int getPegLoc() {
 		return pegLoc;
+	}
+	
+	public static int getBwPegLoc(){
+		return bwPegLoc;
 	}
 
 	public static ColorPeg[][] getSlots() {
@@ -31,6 +37,14 @@ public final class MasterMind {
 	public static void incrementGuess() {
 		guess += 1;
 		pegLoc = 0;
+		bwPegLoc = 0;
+	}
+	
+	public static void setAi(){
+		ai = true;
+	}
+	public static boolean getAi(){
+		return ai;
 	}
 
 	// generate answers
@@ -68,12 +82,27 @@ public final class MasterMind {
 		coloredSlots[guess][pegLoc] = lastSelectedPeg;
 		pegLoc++;
 	}
+	
+	
+	public static void addBwPeg(BwPeg lastSelectedPeg){
+		if (bwPegLoc > 3)
+			return;
+		pegDraw[guess][bwPegLoc] = lastSelectedPeg;
+		bwPegLoc ++;
+	}
 
 	public static void undoLastPeg() {
-		if (pegLoc == 0)
-			return;
-		pegLoc--;
-		coloredSlots[guess][pegLoc] = null;
+		if(ai){
+			if (bwPegLoc == 0 || guess == 0)
+				return;
+			bwPegLoc --;
+			pegDraw[guess][bwPegLoc] = null;
+		}else{
+			if (pegLoc == 0)
+				return;
+			pegLoc--;
+			coloredSlots[guess][pegLoc] = null;
+		}
 	}
 
 	public static void startGame() {
@@ -82,36 +111,54 @@ public final class MasterMind {
 		MasterMind.guess = 1;
 		MasterMind.pegLoc = 0;
 		MasterMind.pegDraw = new BwPeg[13][4];
+		MasterMind.ai = false;
 		generateAnswer();
+	}
+	
+	public static void startAIGame(){
+		MasterMind.coloredSlots = new ColorPeg[13][4];
+		MasterMind.guess = 0;
+		MasterMind.pegLoc = 0;
+		MasterMind.pegDraw = new BwPeg[13][4];
+		MasterMind.ai = true;
 	}
 
 	public static ArrayList<BwPeg> getFeedBack() {
+		
 		ArrayList<BwPeg> bwFeedBack = new ArrayList<BwPeg>(4);
-		ColorPeg[] userGuess = coloredSlots[guess];
-		ColorPeg[] answer = coloredSlots[0];
-		boolean[] checkBorW = new boolean[4];
-		//First Check for Black Pegs
-		for (int i = 0; i < 4; i++) {
-			if (userGuess[i] == null) {
-				return null;
-			} else if (userGuess[i].getColor().equals(answer[i].getColor())) {
-				checkBorW[i] = true;
-				bwFeedBack.add(new BwPeg(Color.BLACK));
+		if(ai){
+			int i = 0;
+			while(pegDraw[guess][i] != null){
+				bwFeedBack.add(pegDraw[guess][i]);
 			}
 		}
-		// Then check for White pegs last
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				if ((!checkBorW[j]) && userGuess[i].getColor().equals(answer[j].getColor())) {
-					bwFeedBack.add(new BwPeg(Color.WHITE));
-					checkBorW[j] = true;
-					break;
+		else{
+			ColorPeg[] userGuess = coloredSlots[guess];
+			ColorPeg[] answer = coloredSlots[0];
+			boolean[] checkBorW = new boolean[4];
+			//First Check for Black Pegs
+			for (int i = 0; i < 4; i++) {
+				if (userGuess[i] == null) {
+					return null;
+				} else if (userGuess[i].getColor().equals(answer[i].getColor())) {
+					checkBorW[i] = true;
+					bwFeedBack.add(new BwPeg(Color.BLACK));
 				}
 			}
-		}
+			// Then check for White pegs last
+			for (int i = 0; i < 4; i++) {
+				for (int j = 0; j < 4; j++) {
+					if ((!checkBorW[j]) && userGuess[i].getColor().equals(answer[j].getColor())) {
+						bwFeedBack.add(new BwPeg(Color.WHITE));
+						checkBorW[j] = true;
+						break;
+					}
+				}
+			}
 
-		for (int i = 0; i < bwFeedBack.size(); i++) {
-			pegDraw[guess][i] = bwFeedBack.get(i);
+			for (int i = 0; i < bwFeedBack.size(); i++) {
+				pegDraw[guess][i] = bwFeedBack.get(i);
+			}
 		}
 		return bwFeedBack;
 	}
