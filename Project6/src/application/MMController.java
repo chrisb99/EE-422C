@@ -23,15 +23,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -42,7 +36,6 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 public class MMController {
@@ -54,11 +47,9 @@ public class MMController {
 	private static double rHght;
 
 	@FXML
-	private Button checkButton;
-
+	private Button blackButton;
 	@FXML
-	private Button undoButton;
-
+	private Button whiteButton;
 	@FXML
 	private Button redButton;
 	@FXML
@@ -71,25 +62,46 @@ public class MMController {
 	private Button greenButton;
 	@FXML
 	private Button orangeButton;
+	@FXML
+	private Button startButton;
+	Map colorMap;
 
 	@FXML
 	public void initialize() {
+		colorMap = new HashMap<Color, String>();
+		colorMap.put(Color.GREEN, "Green");
+		colorMap.put(Color.RED, "Red");
+		colorMap.put(Color.BLUE, "Blue");
+		colorMap.put(Color.YELLOW, "Yellow");
+		colorMap.put(Color.PURPLE, "Purple");
+		colorMap.put(Color.ORANGE, "Orange");
 	}
 
-	void AIButtonVisib() {
+	@FXML
+	void startButton(ActionEvent event) {
+		startButton.setVisible(false);
 		redButton.setVisible(false);
 		blueButton.setVisible(false);
 		yellowButton.setVisible(false);
 		purpleButton.setVisible(false);
 		orangeButton.setVisible(false);
 		greenButton.setVisible(false);
-		undoButton.setVisible(false);
-		checkButton.setVisible(false);
 	}
 
+	void AIButtonVisib() {
+		startButton.setVisible(false);
+		redButton.setVisible(false);
+		blueButton.setVisible(false);
+		yellowButton.setVisible(false);
+		purpleButton.setVisible(false);
+		orangeButton.setVisible(false);
+		greenButton.setVisible(false);
+	}
+	
+
 	/**
-	 * Checks the current row and if win/loss conditions are met.
-	 */
+	 *  Checks the current row and if win/loss conditions are met. 
+	 * */	
 	@FXML
 	void checkButton(ActionEvent event) {
 		int guessNum = MasterMind.getGuess();
@@ -138,8 +150,8 @@ public class MMController {
 	}
 
 	/**
-	 * Checks how many blacks there are in PegStats.
-	 */
+	 *  Checks how many blacks there are in PegStats.
+	 * */	
 	public int checkBlack(ArrayList<BwPeg> pegStats) {
 		int bCount = 0;
 		for (BwPeg e : pegStats) {
@@ -149,41 +161,50 @@ public class MMController {
 		}
 		return bCount;
 	}
-
+	
+	
+	
 	/**
-	 * Plays a Blue Peg into colored slots portion of the board.
+	 * Plays a Blue Peg into colored slots portion of the board. 
 	 * 
-	 */
+	 * */	
 	@FXML
 	void playBluePeg(ActionEvent event) {
 		MasterMind.addColoredPeg(new ColorPeg(javafx.scene.paint.Color.BLUE));
-		this.drawBoard();
+		this.drawBoard();	
 	}
+	
+	
+	
 
 	/**
-	 * Plays a Green Peg into colored slots portion of the board.
+	 * Plays a Green Peg into colored slots portion of the board. 
 	 * 
-	 */
+	 * */	
 	@FXML
 	void playGreenPeg(ActionEvent event) {
 		MasterMind.addColoredPeg(new ColorPeg(javafx.scene.paint.Color.GREEN));
 		this.drawBoard();
 	}
 
+	
 	/**
-	 * Plays a Orange Peg into colored slots portion of the board.
+	 * Plays a Orange Peg into colored slots portion of the board. 
 	 * 
-	 */
+	 * */	
 	@FXML
 	void playOrangePeg(ActionEvent event) {
 		MasterMind.addColoredPeg(new ColorPeg(javafx.scene.paint.Color.ORANGE));
 		this.drawBoard();
 	}
-
+	
+	
+	
+	
 	/**
-	 * Plays a purple peg into colored slots portion of the board.
+	 * Plays a purple peg into colored slots portion of the board. 
 	 * 
-	 */
+	 * */	
 	@FXML
 	void playPurplePeg(ActionEvent event) {
 		MasterMind.addColoredPeg(new ColorPeg(javafx.scene.paint.Color.PURPLE));
@@ -191,63 +212,67 @@ public class MMController {
 	}
 
 	/**
-	 * Plays a red peg into colored slots portion of the board.
+	 * Plays a red peg into colored slots portion of the board. 
 	 * 
-	 */
-
+	 * */	
+	
+	
 	@FXML
 	void playRedPeg(ActionEvent event) {
 		MasterMind.addColoredPeg(new ColorPeg(javafx.scene.paint.Color.RED));
 		this.drawBoard();
 	}
 
+	
 	/**
-	 * Plays a yellow peg into colored slots portion of the board.
+	 * Plays a yellow peg into colored slots portion of the board. 
 	 * 
-	 */
+	 * */	
 	@FXML
 	void playYellowPeg(ActionEvent event) {
 		MasterMind.addColoredPeg(new ColorPeg(javafx.scene.paint.Color.YELLOW));
 		this.drawBoard();
 	}
 
+	
 	/**
-	 * Plays a white peg into black peg into the array.
+	 * Plays a white peg into black peg into the array. 
 	 * 
-	 */
+	 * */	
 	@FXML
 	void playWhitePeg(ActionEvent event) {
 		MasterMind.addBwPeg(new BwPeg(javafx.scene.paint.Color.WHITE));
 		this.drawBoard();
 	}
 
+	
 	/**
-	 * Plays a black peg into black peg into the array.
+	 * Plays a black peg into black peg into the array. 
 	 * 
-	 */
+	 * */	
 	@FXML
 	void playBlackPeg(ActionEvent event) {
 		MasterMind.addBwPeg(new BwPeg(javafx.scene.paint.Color.BLACK));
 		this.drawBoard();
 	}
-
 	/**
 	 * Undoes the last move.
 	 * 
-	 */
-
+	 * */
+	
 	@FXML
 	void undoLastMove(ActionEvent event) {
 		MasterMind.undoLastPeg();
 		this.drawBoard();
 	}
-
 	/**
-	 * Method which is called when the game start it's responsible for the game
-	 * version select menu.
+	 * Method which is called when the game start it's responsible for the game version select menu.
 	 * 
-	 */
+	 * */
 	void launchMastermind() {
+		startButton.setVisible(false);
+		blackButton.setVisible(false);
+		whiteButton.setVisible(false);
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Welcome to Mastermind");
 		alert.setHeaderText("What would you like to do");
@@ -263,21 +288,17 @@ public class MMController {
 			purpleButton.setVisible(true);
 			orangeButton.setVisible(true);
 			greenButton.setVisible(true);
-			undoButton.setVisible(true);
-			checkButton.setVisible(true);
 			MasterMind.startGame();
 			drawBoard();
 		} else {
 			MasterMind.startGame();
-
 			mainAI();
 		}
 	}
-
 	/**
-	 * Draws the board and calls the drawBWpegs and drawColoredSlots methods.
+	 * Draws the board and calls the drawBWpegs and drawColoredSlots methods. 
 	 * 
-	 */
+	 * */
 	void drawBoard() {
 		gc = mmCanvas.getGraphicsContext2D();
 		ColorPeg[][] slots = MasterMind.getSlots();
@@ -302,11 +323,10 @@ public class MMController {
 		drawBWPegs();
 		drawColoredSlots(true);
 	}
-
 	/**
 	 * Draws the bwPegs to
 	 * 
-	 */
+	 * */
 
 	private void drawBWPegs() {
 		gc.setLineWidth(4);
@@ -329,13 +349,12 @@ public class MMController {
 		}
 
 	}
-
 	/**
-	 * Draws the colored slots array into the board and depending on if the
-	 * cover is set will cover the first solution row.
+	 * Draws the colored slots array into the board and depending on if the cover is set will cover the first 
+	 * solution row.
 	 * 
-	 */
-
+	 * */
+	
 	private void drawColoredSlots(boolean coverSet) {
 		// Draw the Colored Slot Matrix on to the Board
 		ColorPeg[][] slots = MasterMind.getSlots();
@@ -365,44 +384,25 @@ public class MMController {
 
 	Timer timer = new java.util.Timer();
 	
-	private int numOfTimes;
-	
-	@FXML
-	void stepButtonPressed(ActionEvent event) {
-
-	}
-
 	public int aiBlackCounter(Color[] computersGuess) {
 		for (Color e : computersGuess) {
 			MasterMind.addColoredPeg(new ColorPeg(e));
 		}
 		int bCount = checkBlack(MasterMind.getFeedBack());
-		Task<Void> sleeper = new Task<Void>() {
-			@Override
-			protected Void call() throws Exception {
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-				}
-				return null;
-			}
-		};
-		sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-			@Override
-			public void handle(WorkerStateEvent event) {
-				drawBoard();
-			}
-		});
-		new Thread(sleeper).start();
+		drawBoard();
 		MasterMind.incrementGuess();
 		return bCount;
+
 	}
-
+	
+	
 	/**
-	 * Starts the AI which can guess the correct solution with a 16 percent
+	 * Starts the AI which can guess the correct solution with a 16 percent 
 	 * chance of it guessing wrong.
-	 */
-
+	 * 
+	 * 
+	 * */
+	
 	public void mainAI() {
 		drawBoard();
 		AIButtonVisib();
@@ -495,7 +495,7 @@ public class MMController {
 		Iterator<Color[]> solsItter = finalSetOfSolutions.iterator();
 		int bCount = 0;
 		guessNo = 0;
-		while (solsItter.hasNext() && bCount < 4 && MasterMind.getGuess() <= 12) {
+		while (solsItter.hasNext() && bCount < 4 && MasterMind.getGuess() < 12) {
 			bCount = aiBlackCounter(solsItter.next());
 		}
 		drawColoredSlots(false);
@@ -523,5 +523,4 @@ public class MMController {
 
 		}
 	}
-
 }

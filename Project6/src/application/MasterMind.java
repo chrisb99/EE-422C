@@ -11,6 +11,7 @@
  * Fall 2015
  */
 
+
 package application;
 
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public final class MasterMind {
 			}
 		}
 	}
-
+	
 	public static void addColoredPeg(ColorPeg lastSelectedPeg) {
 		// Take the Pin the ColoredPeg passed in and add it colorSlots matrix
 		if (pegLoc > 3)
@@ -100,9 +101,9 @@ public final class MasterMind {
 		if (pegLoc == 0) {
 			return;
 		}
-		pegLoc--;
-		coloredSlots[guess][pegLoc] = null;
-
+			pegLoc--;
+			coloredSlots[guess][pegLoc] = null;
+		
 	}
 
 	public static void startGame() {
@@ -113,6 +114,8 @@ public final class MasterMind {
 		MasterMind.pegDraw = new BwPeg[13][4];
 		generateAnswer();
 	}
+
+
 
 	public static ArrayList<BwPeg> getFeedBack() {
 		ArrayList<BwPeg> bwFeedBack = new ArrayList<BwPeg>(4);
@@ -137,18 +140,16 @@ public final class MasterMind {
 			// Then check for White pegs last
 			for (int i = 0; i < 4; i++) {
 				for (int j = 0; j < 4; j++) {
-					if ((!checkBorW[j])) {
-						if (userGuess[i].getColor().equals(answer[j].getColor())) {
-							bwFeedBack.add(new BwPeg(Color.WHITE));
-							checkBorW[j] = true;
-							break;
-						}
+					if ((!checkBorW[j]) && userGuess[i].getColor().equals(answer[j].getColor())) {
+						bwFeedBack.add(new BwPeg(Color.WHITE));
+						checkBorW[j] = true;
+						break;
 					}
 				}
 			}
 
-			for (int k = 0; k < bwFeedBack.size(); k++) {
-				pegDraw[guess][k] = bwFeedBack.get(k);
+			for (int i = 0; i < bwFeedBack.size(); i++) {
+				pegDraw[guess][i] = bwFeedBack.get(i);
 			}
 		}
 		return bwFeedBack;
