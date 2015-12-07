@@ -71,20 +71,28 @@ public class MMController {
 	private Button greenButton;
 	@FXML
 	private Button orangeButton;
+	@FXML
+	private Button stepButton;
 
 	@FXML
 	public void initialize() {
-	}
-
-	void AIButtonVisib() {
-		redButton.setVisible(false);
-		blueButton.setVisible(false);
-		yellowButton.setVisible(false);
-		purpleButton.setVisible(false);
-		orangeButton.setVisible(false);
-		greenButton.setVisible(false);
-		undoButton.setVisible(false);
-		checkButton.setVisible(false);
+		gc = mmCanvas.getGraphicsContext2D();
+		gcWdth = mmCanvas.getWidth();
+		gcHght = (mmCanvas.getHeight());
+		gc.setFill(Color.DARKGOLDENROD);
+		gc.fillRect(0, 0, gcWdth, gcHght);
+		rHght = gcHght / 13;
+		gc.setStroke(javafx.scene.paint.Color.BLACK);
+		gc.setLineWidth(1);
+		gc.strokeLine((gcWdth * .865), 0, (gcWdth * .865), gcHght);
+		gc.strokeLine((gcWdth), 0, (gcWdth), gcHght);
+		gc.setLineWidth(3);
+		gc.strokeLine(0, gcHght, gcWdth, gcHght);
+		gc.strokeLine(0, gcHght, gcWdth, gcHght);
+		gc.strokeLine(0, 0, 0, gcHght);
+		gc.strokeLine(0, 0, gcWdth, 0);
+		
+		
 	}
 
 	/**
@@ -111,12 +119,12 @@ public class MMController {
 		drawBoard();
 		bCount = checkBlack(pegStats);
 		if ((bCount == 4) || (guessNum == 12)) {
-			drawColoredSlots(false);
+			drawColoredSlots(false,MasterMind.getGuess());
 			String endText = new String();
 			if (bCount == 4) {
 				endText += "You win!";
 			} else {
-				endText += " You suck!";
+				endText += " You loose!";
 			}
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("End of Game");
@@ -140,7 +148,7 @@ public class MMController {
 	/**
 	 * Checks how many blacks there are in PegStats.
 	 */
-	public int checkBlack(ArrayList<BwPeg> pegStats) {
+	private int checkBlack(ArrayList<BwPeg> pegStats) {
 		int bCount = 0;
 		for (BwPeg e : pegStats) {
 			if (e.toString().equals("b")) {
@@ -242,6 +250,98 @@ public class MMController {
 		this.drawBoard();
 	}
 
+	@FXML
+	void stepButtonPressed(ActionEvent event) {
+		numOfSteps += 1;
+		// Draw the Colored Slot Matrix on to the Board
+		ColorPeg[][] slots = MasterMind.getSlots();
+		double horizOffset;
+		gc.setLineWidth(2);
+		for (int i = 0; i < numOfSteps; i++) {
+			horizOffset = .1;
+			for (int j = 0; j < 4; j++) {
+				if (slots[i][j] == null) {
+					gc.setFill(Color.WHITE);
+					gc.fillOval(gcWdth * horizOffset, (i * rHght + (rHght / 4)), 40, 40);
+					gc.strokeOval(gcWdth * horizOffset, (i * rHght + (rHght / 4)), 40, 40);
+				} else {
+					gc.setFill(slots[i][j].getColor());
+					gc.fillOval(gcWdth * horizOffset, (i * rHght + (rHght / 4)), 40, 40);
+				}
+				horizOffset += .2;
+			}
+			horizOffset = .1;
+		}
+		BwPeg[][] bwDraw = MasterMind.getPegDraw();
+		horizOffset = 0;
+		double vrtclOffset;
+		for (int i = 1; i < numOfSteps; i++) {
+			gc.strokeLine((0), (rHght * i), (gcWdth), ((gcHght / 13) * i));
+			for (int j = 0; j < 4; j++) {
+				horizOffset = (j == 0 || j == 1) ? .885 : .935;
+				vrtclOffset = (j == 1 || j == 3) ? ((5 * rHght) / 8) : (rHght / 6);
+				if (bwDraw[i][j] != null) {
+					gc.setFill(bwDraw[i][j].getColor());
+					gc.strokeOval(gcWdth * horizOffset, (i * rHght + vrtclOffset), 20, 20);
+					gc.fillOval(gcWdth * horizOffset, (i * rHght + vrtclOffset), 20, 20);
+				} else {
+					gc.strokeOval(gcWdth * horizOffset, (i * rHght + vrtclOffset), 20, 20);
+				}
+			}
+		}
+		if (numOfSteps >= 12) {
+			String endText;
+			if (aiWon) {
+				endText = "Ai beat the game!";
+			} else {
+				endText = "Ai lost the game";
+			}
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("End of Game");
+			alert.setHeaderText(endText);
+			alert.setContentText("Would you like to play again?");
+			ButtonType buttonTypeOne = new ButtonType("Play Again");
+			ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+			alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == buttonTypeOne) {
+				launchMastermind();
+			} else {
+
+			}
+		}
+
+	}
+
+	private void SinglePLayerVisib() {
+		redButton.setVisible(true);
+		blueButton.setVisible(true);
+		yellowButton.setVisible(true);
+		purpleButton.setVisible(true);
+		orangeButton.setVisible(true);
+		greenButton.setVisible(true);
+		undoButton.setVisible(true);
+		checkButton.setVisible(true);
+		stepButton.setVisible(false);
+	}
+
+	private void AIButtonVisib() {
+		stepButton.setVisible(true);
+		checkButton.setVisible(false);
+		redButton.setVisible(false);
+		blueButton.setVisible(false);
+		yellowButton.setVisible(false);
+		purpleButton.setVisible(false);
+		orangeButton.setVisible(false);
+		greenButton.setVisible(false);
+		undoButton.setVisible(false);
+		// checkButton.setVisible(false);
+	}
+
+	private boolean singlePlayerMode;
+	private boolean aiWon;
+	private int numOfSteps;
+
 	/**
 	 * Method which is called when the game start it's responsible for the game
 	 * version select menu.
@@ -257,20 +357,19 @@ public class MMController {
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == playButton) {
 			// Game starts and the player plays.
-			redButton.setVisible(true);
-			blueButton.setVisible(true);
-			yellowButton.setVisible(true);
-			purpleButton.setVisible(true);
-			orangeButton.setVisible(true);
-			greenButton.setVisible(true);
-			undoButton.setVisible(true);
-			checkButton.setVisible(true);
+			singlePlayerMode = true;
 			MasterMind.startGame();
+			SinglePLayerVisib();
 			drawBoard();
 		} else {
+			singlePlayerMode = false;
+			numOfSteps=0;
 			MasterMind.startGame();
+			AIButtonVisib();
+			drawBoard();
+			AIPlayer joshGroban = new AIPlayer();
+			aiWon = joshGroban.play();
 
-			mainAI();
 		}
 	}
 
@@ -279,28 +378,15 @@ public class MMController {
 	 * 
 	 */
 	void drawBoard() {
-		gc = mmCanvas.getGraphicsContext2D();
-		ColorPeg[][] slots = MasterMind.getSlots();
-		BwPeg[][] bwDraw = MasterMind.getPegDraw();
-		gcWdth = mmCanvas.getWidth();
-		gcHght = (mmCanvas.getHeight());
-		gc.setFill(Color.DARKGOLDENROD);
-		gc.fillRect(0, 0, gcWdth, gcHght);
-		rHght = gcHght / 13;
-		gc.setStroke(javafx.scene.paint.Color.BLACK);
-		gc.setLineWidth(1);
-		gc.strokeLine((gcWdth * .865), 0, (gcWdth * .865), gcHght);
-		gc.strokeLine((gcWdth), 0, (gcWdth), gcHght);
-		gc.setLineWidth(3);
-		gc.strokeLine(0, gcHght, gcWdth, gcHght);
-		gc.strokeLine(0, gcHght, gcWdth, gcHght);
-		gc.strokeLine(0, 0, 0, gcHght);
-		gc.strokeLine(0, 0, gcWdth, 0);
 		// Draw the Status
 		gc.setLineWidth(2);
 		// Draw BW PEGS
-		drawBWPegs();
-		drawColoredSlots(true);
+		drawBWPegs(MasterMind.getGuess());
+		if (singlePlayerMode) {
+			drawColoredSlots(true,MasterMind.getGuess());
+		} else {
+			drawColoredSlots(false,MasterMind.getGuess());
+		}
 	}
 
 	/**
@@ -308,12 +394,13 @@ public class MMController {
 	 * 
 	 */
 
-	private void drawBWPegs() {
+	private void drawBWPegs(int range) {
 		gc.setLineWidth(4);
+		range = (range == 1)?12:range;
 		BwPeg[][] bwDraw = MasterMind.getPegDraw();
 		double horizOffset;
 		double vrtclOffset;
-		for (int i = 1; i < 13; i++) {
+		for (int i = 1; i <= range; i++) {
 			gc.strokeLine((0), (rHght * i), (gcWdth), ((gcHght / 13) * i));
 			for (int j = 0; j < 4; j++) {
 				horizOffset = (j == 0 || j == 1) ? .885 : .935;
@@ -323,6 +410,8 @@ public class MMController {
 					gc.strokeOval(gcWdth * horizOffset, (i * rHght + vrtclOffset), 20, 20);
 					gc.fillOval(gcWdth * horizOffset, (i * rHght + vrtclOffset), 20, 20);
 				} else {
+					gc.setFill(Color.DARKGOLDENROD);
+					gc.fillOval(gcWdth * horizOffset, (i * rHght + vrtclOffset), 20, 20);
 					gc.strokeOval(gcWdth * horizOffset, (i * rHght + vrtclOffset), 20, 20);
 				}
 			}
@@ -335,13 +424,13 @@ public class MMController {
 	 * cover is set will cover the first solution row.
 	 * 
 	 */
-
-	private void drawColoredSlots(boolean coverSet) {
+	private void drawColoredSlots(boolean coverSet,int range) {
 		// Draw the Colored Slot Matrix on to the Board
+		range = (range == 1)?12:range;
 		ColorPeg[][] slots = MasterMind.getSlots();
 		double horizOffset;
 		gc.setLineWidth(2);
-		for (int i = 0; i < 13; i++) {
+		for (int i = 0; i <= range; i++) {
 			horizOffset = .1;
 			for (int j = 0; j < 4; j++) {
 				if (slots[i][j] == null) {
@@ -360,167 +449,6 @@ public class MMController {
 			Image img;
 			img = new Image(getClass().getResourceAsStream("MastermindLogo.png"));
 			gc.drawImage(img, 0, 0, (gcWdth * .865), rHght);
-		}
-	}
-
-	Timer timer = new java.util.Timer();
-	
-	private int numOfTimes;
-	
-	@FXML
-	void stepButtonPressed(ActionEvent event) {
-
-	}
-
-	public int aiBlackCounter(Color[] computersGuess) {
-		for (Color e : computersGuess) {
-			MasterMind.addColoredPeg(new ColorPeg(e));
-		}
-		int bCount = checkBlack(MasterMind.getFeedBack());
-		Task<Void> sleeper = new Task<Void>() {
-			@Override
-			protected Void call() throws Exception {
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-				}
-				return null;
-			}
-		};
-		sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-			@Override
-			public void handle(WorkerStateEvent event) {
-				drawBoard();
-			}
-		});
-		new Thread(sleeper).start();
-		MasterMind.incrementGuess();
-		return bCount;
-	}
-
-	/**
-	 * Starts the AI which can guess the correct solution with a 16 percent
-	 * chance of it guessing wrong.
-	 */
-
-	public void mainAI() {
-		drawBoard();
-		AIButtonVisib();
-		int guessNo = 0;
-		Color incorrect = null;
-		Map<Color, Integer> colors = new HashMap<Color, Integer>();
-		ArrayList<Color> inSolution = new ArrayList<Color>();
-		ArrayList<Color> leftSide = new ArrayList<Color>();
-		ArrayList<Color> rightSide = new ArrayList<Color>();
-		Color[] solutionGuess = new Color[4];
-		// add all the colors set to 0 to the map.
-		colors.put(Color.GREEN, 0);
-		colors.put(Color.RED, 0);
-		colors.put(Color.PURPLE, 0);
-		colors.put(Color.ORANGE, 0);
-		colors.put(Color.YELLOW, 0);
-		colors.put(Color.BLUE, 0);
-		Set<Color> colorKeys = colors.keySet();
-		Iterator<Color> colorItterator = colorKeys.iterator();
-		int slotsFound = 0;
-		while (colorItterator.hasNext() && slotsFound < 4) {
-			Color e = colorItterator.next();
-			for (int i = 0; i < 4; i++) {
-				solutionGuess[i] = e;
-			}
-			int numOfColor = aiBlackCounter(solutionGuess);
-			if (numOfColor > 0) {
-				inSolution.add(e);
-				slotsFound += numOfColor;
-			} else {
-				incorrect = e;
-			}
-			colors.put(e, colors.get(e) + numOfColor);
-		}
-		// Mask the left side with a color that's not in the Solution
-		for (Color e : inSolution) {
-			if (leftSide.size() == 2) {
-				for (int i = 0; i < colors.get(e); i++) {
-					rightSide.add(e);
-				}
-			} else if (rightSide.size() == 2) {
-				for (int i = 0; i < colors.get(e); i++) {
-					leftSide.add(e);
-				}
-			} else {
-				solutionGuess[0] = incorrect;
-				solutionGuess[1] = incorrect;
-				solutionGuess[2] = e;
-				solutionGuess[3] = e;
-				int ttlOfClrInSl = colors.get(e);
-				int nmBlcks = aiBlackCounter(solutionGuess);
-				for (int i = 0; i < (ttlOfClrInSl - nmBlcks); i++) {
-					leftSide.add(e);
-				}
-				for (int i = 0; i < nmBlcks; i++) {
-					rightSide.add(e);
-				}
-			}
-		}
-		// Build a solution masked with a color not in the sequence
-		ArrayList<Color[]> finalSetOfSolutions = new ArrayList<Color[]>();
-		solutionGuess = new Color[4];
-		solutionGuess[0] = leftSide.get(0);
-		solutionGuess[1] = leftSide.get(1);
-		solutionGuess[2] = rightSide.get(0);
-		solutionGuess[3] = rightSide.get(1);
-		finalSetOfSolutions.add(solutionGuess);
-
-		solutionGuess = new Color[4];
-		solutionGuess[0] = leftSide.get(1);
-		solutionGuess[1] = leftSide.get(0);
-		solutionGuess[2] = rightSide.get(0);
-		solutionGuess[3] = rightSide.get(1);
-		finalSetOfSolutions.add(solutionGuess);
-
-		solutionGuess = new Color[4];
-		solutionGuess[0] = leftSide.get(0);
-		solutionGuess[1] = leftSide.get(1);
-		solutionGuess[2] = rightSide.get(1);
-		solutionGuess[3] = rightSide.get(0);
-		finalSetOfSolutions.add(solutionGuess);
-
-		solutionGuess = new Color[4];
-		solutionGuess[0] = leftSide.get(1);
-		solutionGuess[1] = leftSide.get(0);
-		solutionGuess[2] = rightSide.get(1);
-		solutionGuess[3] = rightSide.get(0);
-		finalSetOfSolutions.add(solutionGuess);
-
-		Iterator<Color[]> solsItter = finalSetOfSolutions.iterator();
-		int bCount = 0;
-		guessNo = 0;
-		while (solsItter.hasNext() && bCount < 4 && MasterMind.getGuess() <= 12) {
-			bCount = aiBlackCounter(solsItter.next());
-		}
-		drawColoredSlots(false);
-		if ((bCount == 4) || (MasterMind.getGuess() >= 12)) {
-			drawColoredSlots(false);
-			String endText = new String();
-			if (bCount == 4) {
-				endText += "AI Won!";
-			} else {
-				endText += "AI sucks!";
-			}
-			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle("End of Game");
-			alert.setHeaderText(endText);
-			alert.setContentText("Would you like to play again?");
-			ButtonType buttonTypeOne = new ButtonType("Play Again");
-			ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
-			alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeCancel);
-			Optional<ButtonType> result = alert.showAndWait();
-			if (result.get() == buttonTypeOne) {
-				launchMastermind();
-			} else {
-
-			}
-
 		}
 	}
 

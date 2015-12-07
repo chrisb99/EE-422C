@@ -19,10 +19,17 @@ public class BwPeg extends GamePeg{
 	private Color pegColor;
 	private char pegChar;
 	
+	/**
+	 * 
+	 * 
+	 * */
 	@Override
 	public Color getColor() {
 		return pegColor;
 	}
+	/**
+	 * 
+	 * */
 
 	@Override
 	public String toString() {
